@@ -6,7 +6,7 @@
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 19:06:55 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/07 04:52:35 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/07 10:47:27 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,16 +31,14 @@ void	*philo_routine(void *arg)
 	t_philo	*philo;
 
 	philo = (t_philo *)arg;
-	printf("philo %zu\n", philo->left_fork);
-	printf(	"philo %zu\n", philo->right_fork);
-	// while (philo->env->error == false)
-	// {
-	// 	if (philo->env->must_eat != 0 && philo->eat_count == philo->env->must_eat)
-	// 		break ;
-	// 	philo_eat(philo);
-	// 	philo_sleep(philo);
-	// 	philo_think(philo);
-	// }
+	while (1)
+	{
+		// if ( philo->eat_count == philo->env->must_eat)
+		// 	break ;
+		philo_eat(philo);
+		// philo_sleep(philo);
+		// philo_think(philo);
+	}
 	return (NULL);
 }
 
@@ -53,13 +51,24 @@ void	init_philo(t_env *env, t_philo *philo, size_t i)
 	set_philo_forks(philo);
 }
 
+time_t	get_time(void)
+{
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
 void	create_philo(t_env *env)
 {
 	size_t		i;
 	t_philo		*philo;
 	pthread_t	*th;
+	time_t		start;
 
 	i = 0;
+	start = get_time();
+	env->start_time = start;
 	philo = malloc(sizeof(t_philo) * env->philo_num);
 	th = malloc(sizeof(pthread_t) * env->philo_num);
 	if (!th || !philo)
@@ -73,6 +82,7 @@ void	create_philo(t_env *env)
 		i++;
 	}
 	i = 0;
+	printf("philo_num: %zu\n", env->philo_num);
 	while (i < env->philo_num)
 	{
 		pthread_create(&th[i], NULL, philo_routine, &philo[i]);

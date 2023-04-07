@@ -6,7 +6,7 @@
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 16:31:30 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/07 02:21:31 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/07 10:46:50 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ typedef struct s_env
 	size_t			time_to_eat;
 	size_t			time_to_sleep;
 	size_t			must_eat;
-	size_t			start_time;
+	time_t			start_time;
 	bool			error;
 	pthread_mutex_t	*forks;
 }	t_env;
@@ -48,6 +48,8 @@ typedef struct s_philo
 bool	ft_isdigit(char c);
 size_t	ft_atosize(const char *str, t_env *env);
 void	create_philo(t_env *env);
+time_t	get_time(void);
+void	philo_eat(t_philo *philo);
 
 
 
