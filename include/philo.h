@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   philo.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matsuokaryou <matsuokaryou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 16:31:30 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/07 10:46:50 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/07 18:36:34 by matsuokaryo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,9 +24,9 @@
 typedef struct s_env
 {
 	size_t			philo_num;
-	size_t			time_to_die;
-	size_t			time_to_eat;
-	size_t			time_to_sleep;
+	time_t			time_to_die;
+	time_t			time_to_eat;
+	time_t			time_to_sleep;
 	size_t			must_eat;
 	time_t			start_time;
 	bool			error;
@@ -49,6 +49,7 @@ bool	ft_isdigit(char c);
 size_t	ft_atosize(const char *str, t_env *env);
 void	create_philo(t_env *env);
 time_t	get_time(void);
+void	philo_sleep(t_philo *philo);
 void	philo_eat(t_philo *philo);
 
 

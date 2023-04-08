@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_philo.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
+/*   By: matsuokaryou <matsuokaryou@student.42.f    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 19:06:55 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/07 10:47:27 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/07 18:38:09 by matsuokaryo      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,7 @@ void	*philo_routine(void *arg)
 		// if ( philo->eat_count == philo->env->must_eat)
 		// 	break ;
 		philo_eat(philo);
-		// philo_sleep(philo);
+		philo_sleep(philo);
 		// philo_think(philo);
 	}
 	return (NULL);
