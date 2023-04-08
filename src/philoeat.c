@@ -6,7 +6,7 @@
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 10:21:46 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/07 10:55:21 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/08 19:59:41 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 void	odd_eat(t_philo *philo)
 {
-	usleep(10);
+	// usleep(10);
 	pthread_mutex_lock(&philo->env->forks[philo->left_fork]);
 	printf("%zu %zu has taken a fork\n", get_time() - philo->env->start_time, philo->id + 1);
 	pthread_mutex_lock(&philo->env->forks[philo->right_fork]);
@@ -29,7 +29,7 @@ void	odd_eat(t_philo *philo)
 
 void	even_eat(t_philo *philo)
 {
-	usleep(10);
+	// usleep(10);
 	pthread_mutex_lock(&philo->env->forks[philo->right_fork]);
 	printf("%zu %zu has taken a fork\n", get_time() - philo->env->start_time, philo->id + 1);
 	pthread_mutex_lock(&philo->env->forks[philo->left_fork]);
