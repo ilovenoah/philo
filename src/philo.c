@@ -6,7 +6,7 @@
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 16:11:36 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/09 15:45:17 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/09 22:49:48 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,9 @@ bool	error_check(int argc, char **argv)
 
 int	set_env_data(t_env *env, char **argv)
 {
+	env->dead_flag = false;
+	env->must_eat_flag = false;
+	env->full_philo = 0;
 	env->philo_num = ft_atosize(argv[1], env);
 	env->time_to_die = ft_atosize(argv[2], env);
 	env->time_to_eat = ft_atosize(argv[3], env);
@@ -80,6 +83,8 @@ int	init_mutex_forks(t_env *env)
 		i++;
 	}
 	pthread_mutex_init(&env->print, NULL);
+	pthread_mutex_init(&env->eat, NULL);
+	pthread_mutex_init(&env->dead, NULL);
 	return (0);
 }
 
