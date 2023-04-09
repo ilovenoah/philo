@@ -6,7 +6,7 @@
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 16:31:30 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/07 10:46:50 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/09 15:58:45 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,23 +20,25 @@
 # include <sys/time.h>
 # include <limits.h>
 # include <stdbool.h>
+# include <errno.h>
 
 typedef struct s_env
 {
 	size_t			philo_num;
-	size_t			time_to_die;
-	size_t			time_to_eat;
-	size_t			time_to_sleep;
+	time_t			time_to_die;
+	time_t			time_to_eat;
+	time_t			time_to_sleep;
 	size_t			must_eat;
 	time_t			start_time;
 	bool			error;
+	pthread_mutex_t	print;
 	pthread_mutex_t	*forks;
 }	t_env;
 
 typedef struct s_philo
 {
 	size_t			id;
-	size_t			last_eat;
+	time_t			last_eat;
 	size_t			eat_count;
 	size_t			left_fork;
 	size_t			right_fork;
@@ -45,12 +47,15 @@ typedef struct s_philo
 	bool			error;
 }	t_philo;
 
+//libft
 bool	ft_isdigit(char c);
 size_t	ft_atosize(const char *str, t_env *env);
+
+//philo
+void	print_mutex(t_philo *philo, char *str);
 void	create_philo(t_env *env);
 time_t	get_time(void);
+void	philo_sleep(t_philo *philo);
 void	philo_eat(t_philo *philo);
-
-
 
 #endif

@@ -11,7 +11,8 @@ LIB_DIR	=	libft
 LIB_FILES	=	ft_atosize.c
 LIB			=	$(addprefix $(LIB_DIR)/, $(LIB_FILES))
 
-SRC_FILES	=	philo.c exec_philo.c philoeat.c $(LIB)
+SRC_FILES	=	philo.c exec_philo.c philoeat.c philo_sleep.c get_time.c \
+				print_mutex.c $(LIB)
 SRCS		=	$(addprefix $(SRC_DIR)/, $(SRC_FILES))
 
 OBJS	=	$(patsubst $(SRC_DIR)%,$(OBJ_DIR)%,$(SRCS:.c=.o))

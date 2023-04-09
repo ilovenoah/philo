@@ -6,7 +6,7 @@
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/07 10:21:46 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/08 19:59:41 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/09 15:58:32 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,38 @@
 
 void	odd_eat(t_philo *philo)
 {
-	// usleep(10);
+	time_t	start;
+
 	pthread_mutex_lock(&philo->env->forks[philo->left_fork]);
-	printf("%zu %zu has taken a fork\n", get_time() - philo->env->start_time, philo->id + 1);
+	print_mutex(philo, "has taken a fork");
 	pthread_mutex_lock(&philo->env->forks[philo->right_fork]);
-	printf("%zu %zu has taken a fork\n", get_time() - philo->env->start_time, philo->id + 1);
-	printf("%zu %zu is eating\n", get_time() - philo->env->start_time, philo->id + 1);
-	philo->last_eat = get_time();
-	philo->eat_count++;
-	usleep(philo->env->time_to_eat * 1000);
+	print_mutex(philo, "has taken a fork");
+	print_mutex(philo, "is eating");
+	start = get_time();
+	while (get_time() - philo->last_eat < philo->env->time_to_eat)
+		usleep(100);
 	pthread_mutex_unlock(&philo->env->forks[philo->left_fork]);
 	pthread_mutex_unlock(&philo->env->forks[philo->right_fork]);
+	philo->last_eat = get_time();
+	philo->eat_count++;
 }
 
 void	even_eat(t_philo *philo)
 {
-	// usleep(10);
+	time_t	start;
+
 	pthread_mutex_lock(&philo->env->forks[philo->right_fork]);
-	printf("%zu %zu has taken a fork\n", get_time() - philo->env->start_time, philo->id + 1);
+	print_mutex(philo, "has taken a fork");
 	pthread_mutex_lock(&philo->env->forks[philo->left_fork]);
-	printf("%zu %zu has taken a fork\n", get_time() - philo->env->start_time, philo->id + 1);
-	printf("%zu %zu is eating\n", get_time() - philo->env->start_time, philo->id + 1);
-	philo->last_eat = get_time();
-	philo->eat_count++;
-	usleep(philo->env->time_to_eat * 1000);
+	print_mutex(philo, "has taken a fork");
+	print_mutex(philo, "is eating");
+	start = get_time();
+	while (get_time() - start < philo->env->time_to_eat)
+		usleep(100);
 	pthread_mutex_unlock(&philo->env->forks[philo->right_fork]);
 	pthread_mutex_unlock(&philo->env->forks[philo->left_fork]);
+	philo->last_eat = get_time();
+	philo->eat_count++;
 }
 
 void	philo_eat(t_philo *philo)

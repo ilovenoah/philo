@@ -6,7 +6,7 @@
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 16:11:36 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/07 02:22:18 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/09 15:45:17 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,6 +79,7 @@ int	init_mutex_forks(t_env *env)
 		pthread_mutex_init(&env->forks[i], NULL);
 		i++;
 	}
+	pthread_mutex_init(&env->print, NULL);
 	return (0);
 }
 
