@@ -6,7 +6,7 @@
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 16:11:36 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/09 22:49:48 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/10 22:14:02 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,6 +82,7 @@ int	init_mutex_forks(t_env *env)
 		pthread_mutex_init(&env->forks[i], NULL);
 		i++;
 	}
+	pthread_mutex_init(&env->full, NULL);
 	pthread_mutex_init(&env->print, NULL);
 	pthread_mutex_init(&env->eat, NULL);
 	pthread_mutex_init(&env->dead, NULL);
@@ -99,4 +100,6 @@ int	main(int argc, char **argv)
 	if (init_mutex_forks(&env) == -1)
 		return (-1);
 	create_philo(&env);
+	free(env.forks);
+	return (0);
 }

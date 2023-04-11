@@ -1,6 +1,7 @@
 NAME	=	philo
 CC		=	cc
 CFLAGS	=	-Wall -Wextra -Werror
+# CFLAGS	=	-Wall -Wextra -Werror
 RM		=	rm -rf
 OBJ_DIR	=	./obj
 SRC_DIR	=	./src
@@ -29,7 +30,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -I$(INC) -c $< -o $@
 
 #Debug
-debug: CFLAGS += -g -fsanitize=address
+debug: CFLAGS += -g -fsanitize=thread
 debug: re
 
 clean:

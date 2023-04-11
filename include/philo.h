@@ -6,7 +6,7 @@
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 16:31:30 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/09 22:49:18 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/10 17:41:32 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ typedef struct s_env
 	size_t			full_philo;
 	bool			must_eat_flag;
 	bool			dead_flag;
+	pthread_mutex_t	full;
 	pthread_mutex_t	eat;
 	pthread_mutex_t	dead;
 	pthread_mutex_t	print;
@@ -50,6 +51,7 @@ typedef struct s_philo
 	pthread_t		thread;
 	t_env			*env;
 	bool			error;
+	pthread_mutex_t	l_eat;
 }	t_philo;
 
 //libft
@@ -58,6 +60,8 @@ size_t	ft_atosize(const char *str, t_env *env);
 int		ft_strcmp(const char *s1, const char *s2);
 
 //philo
+bool	checkflag(t_philo *philo);
+void	*one_philo(t_philo *philo);
 void	print_mutex(t_philo *philo, char *str);
 void	create_philo(t_env *env);
 time_t	get_time(void);

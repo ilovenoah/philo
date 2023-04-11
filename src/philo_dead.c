@@ -6,30 +6,34 @@
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 19:44:36 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/09 23:02:27 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/10 17:41:19 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-// bool	check_eat(t_philo *philo)
-// {
-// 	size_t	i;
+void	*one_philo(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->env->forks[philo->left_fork]);
+	print_mutex(philo, "has taken a fork");
+	pthread_mutex_unlock(&philo->env->forks[philo->left_fork]);
+	return (NULL);
+}
 
-// 	i = 0;
-// 	if (philo->env->must_eat == 0)
-// 		return (false);
-// 	while (i < philo->env->philo_num)
-// 	{
-// 		if (philo[i].eat_count < philo->env->must_eat)
-// 			return (false);
-// 		i++;
-// 	}
-// 	pthread_mutex_lock(&philo->env->eat);
-// 	philo->env->must_eat_flag = true;
-// 	pthread_mutex_unlock(&philo->env->eat);
-// 	return (true);
-// }
+bool	checkflag(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->env->dead);
+	pthread_mutex_lock(&philo->env->full);
+	if (philo->env->dead_flag == true || philo->env->must_eat_flag == true)
+	{
+		pthread_mutex_unlock(&philo->env->dead);
+		pthread_mutex_unlock(&philo->env->full);
+		return (true);
+	}
+	pthread_mutex_unlock(&philo->env->dead);
+	pthread_mutex_unlock(&philo->env->full);
+	return (false);
+}
 
 bool	checkdie(t_philo *philo)
 {
@@ -38,14 +42,14 @@ bool	checkdie(t_philo *philo)
 	i = 0;
 	while (i < philo->env->philo_num)
 	{
+		pthread_mutex_lock(&philo[i].l_eat);
 		if (get_time() - philo[i].last_eat > philo->env->time_to_die)
 		{
-			pthread_mutex_lock(&philo->env->dead);
-			usleep(10);
+			pthread_mutex_unlock(&philo[i].l_eat);
 			print_mutex(&philo[i], "died");
-			pthread_mutex_unlock(&philo->env->dead);
 			return (true);
 		}
+		pthread_mutex_unlock(&philo[i].l_eat);
 		i++;
 	}
 	return (false);

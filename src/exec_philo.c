@@ -6,29 +6,44 @@
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 19:06:55 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/09 22:54:55 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/11 15:14:57 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
+void	first_action(t_philo *philo, int *first_flag)
+{
+	pthread_mutex_lock(&philo->l_eat);
+	philo->last_eat = get_time();
+	pthread_mutex_unlock(&philo->l_eat);
+	print_mutex(philo, "is thinking");
+	*first_flag = 1;
+}
+
 void	*philo_routine(void *arg)
 {
 	t_philo	*philo;
+	int		first_flag;
 
+	first_flag = 0;
 	philo = (t_philo *)arg;
+	if (first_flag == 0)
+		first_action(philo, &first_flag);
+	if (philo->env->philo_num == 1)
+		return (one_philo(philo));
 	while (1)
 	{
-		if (philo->env->dead_flag == true || philo->env->must_eat_flag == true)
+		if (checkflag(philo))
 			break ;
 		philo_eat(philo);
-		if (philo->env->dead_flag == true || philo->env->must_eat_flag == true)
+		if (checkflag(philo))
 			break ;
 		philo_sleep(philo);
-		if (philo->env->dead_flag == true || philo->env->must_eat_flag == true)
+		if (checkflag(philo))
 			break ;
 		print_mutex(philo, "is thinking");
-		if (philo->env->dead_flag == true || philo->env->must_eat_flag == true)
+		if (checkflag(philo))
 			break ;
 	}
 	return (NULL);
@@ -40,6 +55,7 @@ void	init_philo(t_env *env, t_philo *philo, size_t i)
 	philo->env = env;
 	philo->eat_count = 0;
 	philo->error = false;
+	pthread_mutex_init(&philo->l_eat, NULL);
 	philo->last_eat = get_time();
 	if (philo->id == 0)
 	{
@@ -89,10 +105,12 @@ void	create_philo(t_env *env)
 	start = get_time();
 	env->start_time = start;
 	philo = malloc(sizeof(t_philo) * env->philo_num);
+	if (errno == ENOMEM)
+		return ;
 	th = malloc(sizeof(pthread_t) * env->philo_num);
 	if (errno == ENOMEM)
 	{
-		env->error = true;
+		free(philo);
 		return ;
 	}
 	philo_exec(env, philo, th);
