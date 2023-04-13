@@ -6,17 +6,28 @@
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/09 15:44:19 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/11 15:17:34 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/13 21:28:52 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
 
-void	chenge_deadflag(t_philo *philo)
+time_t	get_time(void)
 {
-	pthread_mutex_lock(&philo->env->dead);
-	philo->env->dead_flag = true;
-	pthread_mutex_unlock(&philo->env->dead);
+	struct timeval	tv;
+
+	gettimeofday(&tv, NULL);
+	return (tv.tv_sec * 1000 + tv.tv_usec / 1000);
+}
+
+void	philo_sleep(t_philo *philo)
+{
+	time_t	start;
+
+	print_mutex(philo, "is sleeping");
+	start = get_time();
+	while (get_time() - start < philo->env->time_to_sleep)
+		usleep(100);
 }
 
 void	chenge_fullflag(t_philo *philo)
@@ -24,6 +35,13 @@ void	chenge_fullflag(t_philo *philo)
 	pthread_mutex_lock(&philo->env->full);
 	philo->env->must_eat_flag = true;
 	pthread_mutex_unlock(&philo->env->full);
+}
+
+void	chenge_deadflag(t_philo *philo)
+{
+	pthread_mutex_lock(&philo->env->dead);
+	philo->env->dead_flag = true;
+	pthread_mutex_unlock(&philo->env->dead);
 }
 
 void	print_mutex(t_philo *philo, char *str)

@@ -6,7 +6,7 @@
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/06 19:06:55 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/11 15:14:57 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/13 20:53:58 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,25 @@ void	init_philo(t_env *env, t_philo *philo, size_t i)
 	}
 }
 
-void	philo_exec(t_env *env, t_philo *philo, pthread_t *th)
+int	pthread_create_x(t_env *env, pthread_t *th, t_philo *philo)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < env->philo_num)
+	{
+		if (pthread_create(&th[i], NULL, philo_routine, &philo[i]) != 0)
+		{
+			printf("Error: pthread_create failed\n");
+			env->error = true;
+			return (-1);
+		}
+		i++;
+	}
+	return (0);
+}
+
+int	philo_exec(t_env *env, t_philo *philo, pthread_t *th)
 {
 	size_t	i;
 
@@ -79,12 +97,8 @@ void	philo_exec(t_env *env, t_philo *philo, pthread_t *th)
 		init_philo(env, &philo[i], i);
 		i++;
 	}
-	i = 0;
-	while (i < env->philo_num)
-	{
-		pthread_create(&th[i], NULL, philo_routine, &philo[i]);
-		i++;
-	}
+	if (pthread_create_x(env, th, philo) == -1)
+		return (-1);
 	philo_dead(philo);
 	i = 0;
 	while (i < env->philo_num)
@@ -92,28 +106,5 @@ void	philo_exec(t_env *env, t_philo *philo, pthread_t *th)
 		pthread_join(th[i], NULL);
 		i++;
 	}
-}
-
-void	create_philo(t_env *env)
-{
-	size_t		i;
-	t_philo		*philo;
-	pthread_t	*th;
-	time_t		start;
-
-	i = 0;
-	start = get_time();
-	env->start_time = start;
-	philo = malloc(sizeof(t_philo) * env->philo_num);
-	if (errno == ENOMEM)
-		return ;
-	th = malloc(sizeof(pthread_t) * env->philo_num);
-	if (errno == ENOMEM)
-	{
-		free(philo);
-		return ;
-	}
-	philo_exec(env, philo, th);
-	free(philo);
-	free(th);
+	return (0);
 }

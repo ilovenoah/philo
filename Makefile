@@ -1,7 +1,6 @@
 NAME	=	philo
 CC		=	cc
 CFLAGS	=	-Wall -Wextra -Werror
-# CFLAGS	=	-Wall -Wextra -Werror
 RM		=	rm -rf
 OBJ_DIR	=	./obj
 SRC_DIR	=	./src
@@ -9,10 +8,10 @@ INC		=	./include
 
 LIB_DIR	=	libft
 
-LIB_FILES	=	ft_atosize.c
+LIB_FILES	=	ft_atosize.c ft_strlen.c
 LIB			=	$(addprefix $(LIB_DIR)/, $(LIB_FILES))
 
-SRC_FILES	=	philo.c exec_philo.c philoeat.c philo_sleep.c get_time.c \
+SRC_FILES	=	philo.c exec_philo.c philoeat.c dataset_and_errorcheck.c \
 				print_mutex.c philo_dead.c $(LIB)
 SRCS		=	$(addprefix $(SRC_DIR)/, $(SRC_FILES))
 

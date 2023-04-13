@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_sleep.c                                      :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/04/07 18:33:56 by matsuokaryo       #+#    #+#             */
-/*   Updated: 2023/04/09 15:55:26 by rmatsuok         ###   ########.fr       */
+/*   Created: 2023/04/13 16:54:37 by rmatsuok          #+#    #+#             */
+/*   Updated: 2023/04/13 17:02:12 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../include/philo.h"
+#include "../../include/philo.h"
 
-void	philo_sleep(t_philo *philo)
+size_t	ft_strlen(char *s)
 {
-	time_t	start;
+	size_t	i;
 
-	print_mutex(philo, "is sleeping");
-	start = get_time();
-	while (get_time() - start < philo->env->time_to_sleep)
-		usleep(100);
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}
+
+int	ft_putstr_fd(char *s, int fd)
+{
+	if (s == NULL)
+		return (-1);
+	write(fd, s, ft_strlen(s));
+	return (-1);
 }

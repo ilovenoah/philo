@@ -6,7 +6,7 @@
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 16:31:30 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/10 17:41:32 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/13 21:01:33 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,14 +24,15 @@
 
 typedef struct s_env
 {
+	size_t			th_num;
 	size_t			philo_num;
 	time_t			time_to_die;
 	time_t			time_to_eat;
 	time_t			time_to_sleep;
 	size_t			must_eat;
 	time_t			start_time;
-	bool			error;
 	size_t			full_philo;
+	bool			error;
 	bool			must_eat_flag;
 	bool			dead_flag;
 	pthread_mutex_t	full;
@@ -56,10 +57,14 @@ typedef struct s_philo
 
 //libft
 bool	ft_isdigit(char c);
+int		ft_putstr_fd(char *s, int fd);
+size_t	ft_strlen(char *s);
 size_t	ft_atosize(const char *str, t_env *env);
 int		ft_strcmp(const char *s1, const char *s2);
 
 //philo
+bool	error_check(int argc, char **argv);
+int		set_env_data(t_env *env, char **argv);
 bool	checkflag(t_philo *philo);
 void	*one_philo(t_philo *philo);
 void	print_mutex(t_philo *philo, char *str);
@@ -69,5 +74,6 @@ bool	check_eat(t_philo *philo);
 void	philo_sleep(t_philo *philo);
 void	philo_eat(t_philo *philo);
 void	philo_dead(t_philo *philo);
+int		philo_exec(t_env *env, t_philo *philo, pthread_t *th);
 
 #endif

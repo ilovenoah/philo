@@ -6,68 +6,11 @@
 /*   By: rmatsuok <rmatsuok@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/04/05 16:11:36 by rmatsuok          #+#    #+#             */
-/*   Updated: 2023/04/10 22:14:02 by rmatsuok         ###   ########.fr       */
+/*   Updated: 2023/04/13 21:59:05 by rmatsuok         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/philo.h"
-
-bool	error_check(int argc, char **argv)
-{
-	size_t	i;
-	size_t	j;
-
-	i = 1;
-	if (argc != 5 && argc != 6)
-	{
-		printf("Error: Wrong number of arguments\n");
-		return (true);
-	}
-	while (i < (size_t)argc)
-	{
-		j = 0;
-		while (argv[i][j])
-		{
-			if (!ft_isdigit(argv[i][j]))
-			{
-				printf("Error: Wrong argument type\n");
-				return (true);
-			}
-			j++;
-		}
-		i++;
-	}
-	return (false);
-}
-
-int	set_env_data(t_env *env, char **argv)
-{
-	env->dead_flag = false;
-	env->must_eat_flag = false;
-	env->full_philo = 0;
-	env->philo_num = ft_atosize(argv[1], env);
-	env->time_to_die = ft_atosize(argv[2], env);
-	env->time_to_eat = ft_atosize(argv[3], env);
-	env->time_to_sleep = ft_atosize(argv[4], env);
-	if (argv[5])
-		env->must_eat = ft_atosize(argv[5], env);
-	else
-		env->must_eat = 0;
-	if (argv[5] && env->must_eat == 0)
-	{
-		printf("Error: Wrong argument type\n");
-		return (-1);
-	}
-	if (env->error == true)
-		return (-1);
-	if (env->philo_num == 0 || env->time_to_die == 0
-		|| env->time_to_eat == 0 || env->time_to_sleep == 0)
-	{
-		printf("Error: Wrong argument type\n");
-		return (-1);
-	}
-	return (0);
-}
 
 int	init_mutex_forks(t_env *env)
 {
@@ -89,6 +32,58 @@ int	init_mutex_forks(t_env *env)
 	return (0);
 }
 
+static void	destroy_mutex_and_free(t_env *env)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < env->philo_num)
+	{
+		pthread_mutex_destroy(&env->forks[i]);
+		i++;
+	}
+	pthread_mutex_destroy(&env->full);
+	pthread_mutex_destroy(&env->print);
+	pthread_mutex_destroy(&env->eat);
+	pthread_mutex_destroy(&env->dead);
+	free(env->forks);
+}
+
+void	philomutex_destroy_and_free(t_env *env, t_philo *philo, pthread_t *th)
+{
+	size_t	i;
+
+	i = 0;
+	while (i < env->philo_num)
+	{
+		pthread_mutex_destroy(&philo[i].l_eat);
+		i++;
+	}
+	free(philo);
+	free(th);
+}
+
+void	create_philo(t_env *env)
+{
+	t_philo		*philo;
+	pthread_t	*th;
+	time_t		start;
+
+	start = get_time();
+	env->start_time = start;
+	philo = malloc(sizeof(t_philo) * env->philo_num);
+	if (errno == ENOMEM)
+		return ;
+	th = malloc(sizeof(pthread_t) * env->philo_num);
+	if (errno == ENOMEM)
+	{
+		free(philo);
+		return ;
+	}
+	philo_exec(env, philo, th);
+	philomutex_destroy_and_free(env, philo, th);
+}
+
 int	main(int argc, char **argv)
 {
 	t_env	env;
@@ -100,6 +95,11 @@ int	main(int argc, char **argv)
 	if (init_mutex_forks(&env) == -1)
 		return (-1);
 	create_philo(&env);
-	free(env.forks);
+	destroy_mutex_and_free(&env);
 	return (0);
 }
+
+// __attribute__((destructor))
+// static void destructor() {
+//     system("leaks -q philo");
+// }
